@@ -13,9 +13,11 @@ import java.util.List;
 @RequestMapping("/api/riders")
 public class RiderController {
 
+    private final UserService userService;
     private final RiderRepository riderRepository;
 
-    public RiderController(RiderRepository riderRepository) {
+    public RiderController(UserService userService, RiderRepository riderRepository) {
+        this.userService = userService;
         this.riderRepository = riderRepository;
     }
 
@@ -33,7 +35,7 @@ public class RiderController {
 
     @PostMapping("/")
     public Rider createRider(@RequestBody Rider rider) {
-        return riderRepository.save(rider);
+        return (Rider) userService.createUser(rider);
     }
 
     @PutMapping("/{id}")
@@ -44,8 +46,8 @@ public class RiderController {
                     rider.setEmail(updatedRider.getEmail());
                     rider.setLocation(updatedRider.getLocation());
                     // Update other fields as needed
-                    Rider savedRider = riderRepository.save(rider);
-                    return ResponseEntity.ok().body(savedRider);
+                    userService.createUser(rider);
+                    return ResponseEntity.ok().body(rider);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -54,7 +56,7 @@ public class RiderController {
     public ResponseEntity<?> deleteRider(@PathVariable Integer id) {
         return riderRepository.findById(id)
                 .map(rider -> {
-                    riderRepository.deleteById(id);
+                    userService.deleteUser(id);
                     return ResponseEntity.ok().build();
                 })
                 .orElse(ResponseEntity.notFound().build());

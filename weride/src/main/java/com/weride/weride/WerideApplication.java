@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 
 import com.weride.weride.model.*;
-import com.weride.weride.repository.RiderRepository;
+import com.weride.weride.repository.UserRepository;
+
 
 @SpringBootApplication
 public class WerideApplication {
@@ -17,19 +18,20 @@ public class WerideApplication {
 	}
 
 }
+
 //TRY
 @Component
-class RiderCommandLineRunner implements CommandLineRunner {
+class UserCommandLineRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Running CommandLineRunner");
 
-		for (Rider rider : this.riderRepository.findAll()) {
-			System.out.println(rider.toString());
-		}
+		for (User user : this.userRepository.findAll()) {
+			System.out.println(user.toString());
+		}	
 	}
 
 	@Autowired 
-	RiderRepository riderRepository;
+	UserRepository userRepository;
 }

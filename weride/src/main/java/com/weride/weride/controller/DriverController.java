@@ -13,9 +13,11 @@ import java.util.List;
 @RequestMapping("/api/drivers")
 public class DriverController {
 
+    private final UserService userService;
     private final DriverRepository driverRepository;
 
-    public DriverController(DriverRepository driverRepository) {
+    public DriverController(UserService userService, DriverRepository driverRepository) {
+        this.userService = userService;
         this.driverRepository = driverRepository;
     }
 
@@ -33,7 +35,7 @@ public class DriverController {
 
     @PostMapping("/")
     public Driver createDriver(@RequestBody Driver driver) {
-        return driverRepository.save(driver);
+         return (Driver) userService.createUser(driver);
     }
 
     @PutMapping("/{id}")
@@ -43,10 +45,10 @@ public class DriverController {
                     driver.setName(updatedDriver.getName());
                     driver.setEmail(updatedDriver.getEmail());
                     driver.setLocation(updatedDriver.getLocation());
-                    driver.updateCars(updatedDriver.getCars());
+                    driver.updateCars(updatedDriver.getCars()); 
                     // Update other fields as needed
-                    Driver savedDriver = driverRepository.save(driver);
-                    return ResponseEntity.ok().body(savedDriver);
+                    userService.createUser(driver);
+                    return ResponseEntity.ok().body(driver);    
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -55,7 +57,7 @@ public class DriverController {
     public ResponseEntity<?> deleteDriver(@PathVariable Integer id) {
         return driverRepository.findById(id)
                 .map(driver -> {
-                    driverRepository.deleteById(id);
+                    userService.deleteUser(id);
                     return ResponseEntity.ok().build();
                 })
                 .orElse(ResponseEntity.notFound().build());

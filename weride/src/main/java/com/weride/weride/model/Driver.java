@@ -14,18 +14,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "DRIVER")
-public class Driver {
+public class Driver extends User {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
-    @Column(name = "name")
-    private String name;
-    
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "location")
     private String location;
@@ -37,36 +31,11 @@ public class Driver {
         // No-argument constructor
     }
 
-    public Driver(String name, String email, String location) {
+    public Driver(String name, String email, String password, String location) {
         // Constructor with arguments
+        super(name, email, password);
         this.cars = new LinkedList<>();
-        this.name = name;
-        this.email = email;
         this.location = location;
-    }
-
-    public int getID() {
-        return this.id;
-    }
-
-    public void setID(int newID) {
-        this.id = newID;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String newName) {
-        this.name = newName;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String newEmail) {
-        this.email = newEmail;
     }
 
     public String getLocation() {
@@ -100,5 +69,9 @@ public class Driver {
         car.setDriver(null);
     }
 
+    @Override
+    public String toString() {
+        return super.getName() + ", " + super.getEmail() + ", " + this.location;
+    }
 }
 
